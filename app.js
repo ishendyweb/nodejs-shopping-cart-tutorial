@@ -18,8 +18,8 @@ var userRoutes = require('./routes/user');
 var app = express();
 
 mongoose.connect('mongodb://localhost:27017/shopping', {
-  useMongoClient: true,
-  /* other options */
+	useMongoClient: true,
+	/* other options */
 });
 require('./config/passport');
 
@@ -35,11 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(cookieParser());
 app.use(session({
-  secret: 'mysupersecret', 
-  resave: false, 
-  saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection }),
-  cookie: { maxAge: 180 * 60 * 1000 }
+	secret: 'mysupersecret', 
+	resave: false, 
+	saveUninitialized: false,
+	store: new MongoStore({ mongooseConnection: mongoose.connection }),
+	cookie: { maxAge: 180 * 60 * 1000 }
 }));
 app.use(flash());
 app.use(passport.initialize());
@@ -58,18 +58,17 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 // error handler
-
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message
-  });
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message
+	});
 });
 
 

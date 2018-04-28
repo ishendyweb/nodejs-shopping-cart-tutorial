@@ -34,15 +34,20 @@ passport.use('local.signup', new LocalStrategy({
         if (user) {
             return done(null, false, {message: 'Email is already in use.'});
         }
-        var newUser = new User();
-        newUser.email = email;
-        newUser.password = newUser.encryptPassword(password);
-        newUser.save(function(err, result) {
-           if (err) {
-               return done(err);
-           }
-           return done(null, newUser);
-        });
+		User.count({'admin': 1},function(err, count) {
+			var newUser = new User();
+			newUser.email = email;
+			newUser.password = newUser.encryptPassword(password);
+			if (!count) {
+				newUser.admin = 1;
+			}
+			newUser.save(function(err, result) {
+			   if (err) {
+				   return done(err);
+			   }
+			   return done(null, newUser);
+			});
+		} );
     });
 }));
 
