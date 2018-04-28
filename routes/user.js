@@ -3,6 +3,7 @@ var router = express.Router();
 var csrf = require('csurf');
 var passport = require('passport');
 
+var User = require('../models/user');
 var Order = require('../models/order');
 var Cart = require('../models/cart');
 
@@ -19,8 +20,50 @@ router.get('/profile', isLoggedIn, function (req, res, next) {
             cart = new Cart(order.cart);
             order.items = cart.generateArray();
         });
-        res.render('user/profile', { orders: orders });
+        res.render('user/profile', { orders: orders, admin: req.user.admin });
     });
+});
+
+router.get('/users/:userId?', isLoggedIn, isAdmin, function (req, res, next) {
+	if(req.params.userId){
+		User.findById(req.params.userId, function(err, user) {
+			if (err) {
+				return res.write('Error!');
+			}
+			Order.find({user: user}, function(err, orders) {
+				if (err) {
+					return res.write('Error!');
+				}
+				var cart;
+				orders.forEach(function(order) {
+					cart = new Cart(order.cart);
+					order.items = cart.generateArray();
+				});
+				user.orders = orders;
+			});
+			res.render('user/user_orders', { userO: user });
+		});
+	}else{
+		User.find({ email: { $ne: req.user.email } }, function(err, users) {
+			if (err) {
+				return res.write('Error!');
+			}
+			users.forEach(function(user) {
+				Order.find({user: user}, function(err, orders) {
+					if (err) {
+						return res.write('Error!');
+					}
+					var cart;
+					orders.forEach(function(order) {
+						cart = new Cart(order.cart);
+						order.items = cart.generateArray();
+					});
+					user.orders = orders;
+				});
+			});
+			res.render('user/users', { users: users });
+		});
+	}
 });
 
 router.get('/logout', isLoggedIn, function (req, res, next) {
@@ -79,6 +122,13 @@ function isLoggedIn(req, res, next) {
 
 function notLoggedIn(req, res, next) {
     if (!req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/');
+}
+
+function isAdmin(req, res, next) {
+    if (req.user.admin) {
         return next();
     }
     res.redirect('/');

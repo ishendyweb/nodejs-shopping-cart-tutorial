@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h1>User Orders</h1>
+		<hr>
+		{{# if userO }}
+			
+			<h2 id="user_{{ userO._id }}"><strong>User:</strong> {{ userO.email }} {{# if userO.admin }}<small>(Administrator)</small>{{/if}}</h2>
+			{{# if userO.orders.length }}
+				{{# each userO.orders }}
+					<div class="panel panel-default">
+						<div class="panel-heading"># Order: {{ @index }}</div>
+						<div class="panel-body">
+							<ul class="list-group">
+								{{# each this.items }}
+									<li class="list-group-item">
+										<span class="badge">{{ this.price }}</span>
+										{{ this.item.title }} | {{ this.qty }} Units
+									</li>
+								{{/each}}
+							</ul>
+						</div>
+						<div class="panel-footer">
+							<strong>Total Price: ${{ this.cart.totalPrice }}</strong>
+						</div>
+					</div>
+				{{/each}}
+			{{ else }}
+				<div class="well">
+					No orders were found.
+				</div>
+			{{/if}}
+		{{ else }}
+			<div class="well">
+				No user was found.
+			</div>
+		{{/if}}
+    </div>
+</div>

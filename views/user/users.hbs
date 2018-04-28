@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h1>Registered Users</h1>
+		<hr>
+		{{# if users.length }}
+			<table class="table table-striped table-bordered">
+			  <thead>
+				<tr>
+				  <th scope="col">#</th>
+				  <th scope="col">Email</th>
+				  <th scope="col">Role</th>
+				  <th scope="col">Orders</th>
+				  <th scope="col">View Orders</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				{{# each users }}
+					<tr>
+					  <th scope="row">{{ @index }}</th>
+					  <td>{{ this.email }}</td>
+					  <td>{{# if this.admin }}Administrator{{ else }}Customer{{/if}}</td>
+					  <td>{{# if this.orders.length }}{{ this.orders.length }}{{ else }}No Orders{{/if}}</td>
+					  <td><a href="/user/users/{{ this._id }}">View</a></td>
+					</tr>
+					
+				{{/each}}
+				</tbody>
+			</table>
+		{{ else }}
+			<div class="well">
+				No registered users were found.
+			</div>
+		{{/if}}
+    </div>
+</div>
