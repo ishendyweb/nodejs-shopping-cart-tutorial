@@ -25,7 +25,8 @@ npm start
 ```
 
 ---
-### The first user you sign up for will be considered `Administrator`, other signups will always be `Customers`
+### - The first user you sign up for will be considered `Administrator`.
+### - Other signups will always be `Customers`.
 ---
 To change database configurations:
 - Two files:
